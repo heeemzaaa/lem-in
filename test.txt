@@ -1,0 +1,14 @@
+5
+##start
+start 2 2
+r1 3 1
+r2 3 3
+r3 4 1
+##end
+end 5 2
+
+start-r1
+start-r2
+r1-r3
+r2-end
+r3-end
