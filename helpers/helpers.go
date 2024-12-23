@@ -6,12 +6,13 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
 
 type Farm struct {
-	Rooms, LinksCheck        map[string]any
+	 LinksCheck        map[string]any
 	Links                    map[string][]string
 	StartNeighbots, BadRooms []string
 	Badpaths, ValidPaths     [][]string
@@ -28,7 +29,9 @@ func (F *Farm) ExtarctBadRooms() {
 		BadRooms = append(BadRooms, badroom)
 	}
 
-	F.Sorting()
+	sort.Slice(BadRooms, func(i, j int) bool {
+		return len(BadRooms[i]) < len(BadRooms[j])
+	})
 	// lets extract the room that has more links
 	maxsize := len(BadRooms[len(BadRooms)-1]) - 1
 	for i, room := range BadRooms {
@@ -39,17 +42,6 @@ func (F *Farm) ExtarctBadRooms() {
 		BadRooms[i] = nil
 	}
 }
-
-func (F *Farm) Sorting() {
-	for i := 0; i < len(F.BadRooms); i++ {
-		for j := 0; j < len(F.BadRooms)-1-i; j++ {
-			if len(F.BadRooms[j]) > len(F.BadRooms[j+1]) {
-				F.BadRooms[j], F.BadRooms[j+1] = F.BadRooms[j+1], F.BadRooms[j]
-			}
-		}
-	}
-}
-
 // find the paths
 func (F *Farm) FindPaths() {
 	type QueueItem struct {
@@ -226,7 +218,7 @@ func (F *Farm) ReadFile(file *os.File) error {
 		return errors.New("ERROR: invalid data format, no start or end room")
 	}
 	F.LinksCheck = nil
-	F.Rooms = nil
+	
 
 	F.ExtarctBadRooms()
 
