@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"sort"
 	"strconv"
 	"strings"
 )
@@ -29,9 +28,7 @@ func (F *Farm) ExtarctBadRooms() {
 		BadRooms = append(BadRooms, badroom)
 	}
 
-	sort.Slice(BadRooms, func(i, j int) bool {
-		return len(BadRooms[i]) < len(BadRooms[j])
-	})
+	F.Sorting()
 	// lets extract the room that has more links
 	maxsize := len(BadRooms[len(BadRooms)-1]) - 1
 	for i, room := range BadRooms {
@@ -40,6 +37,16 @@ func (F *Farm) ExtarctBadRooms() {
 		}
 		// free up the room
 		BadRooms[i] = nil
+	}
+}
+
+func (F *Farm) Sorting() {
+	for i := 0; i < len(F.BadRooms); i++ {
+		for j := 0; j < len(F.BadRooms)-1-i; j++ {
+			if len(F.BadRooms[j]) > len(F.BadRooms[j+1]) {
+				F.BadRooms[j], F.BadRooms[j+1] = F.BadRooms[j+1], F.BadRooms[j]
+			}
+		}
 	}
 }
 
