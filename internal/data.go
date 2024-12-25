@@ -1,10 +1,14 @@
-package helpers
+package lem
 
-type Farm struct {
-	Rooms, LinksCheck        map[string]any
-	Links                    map[string][]string
-	StartNeighbots, BadRooms []string
-	Badpaths, ValidPaths     [][]string
-	StartRoom, EndRoom       string
-	Ants                     int
-}
+var (
+	Ways       = make(map[string][]string)
+	Emptyroom  = make(map[string]bool)
+	checklinks =make(map[string]bool)
+	Start, End string
+	Ants       int
+	seen       = make(map[string]bool)
+	// max        = 0
+	// badrooms   = []string{}
+	visited   = make(map[string]bool)
+	solutions [][]string
+)
