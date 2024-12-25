@@ -1,4 +1,3 @@
-// main.go
 package main
 
 import (
@@ -7,51 +6,28 @@ import (
 	"log"
 	"os"
 
-	"lemin/helpers"
+	lem "lem/internal"
 )
 
-// add somthig to test in my life
-
 func main() {
-	if len(os.Args) != 2 {
-		log.Fatal("Usage: go run . <input_file>")
-	}
-	farm := &helpers.Farm{
-		LinksCheck: make(map[string]any),
-		Links:      make(map[string][]string),
-	}
-	file, err := os.Open(os.Args[1])
-	if err != nil {
+	err := lem.ReadFile(lem.ValidArgs(os.Args))
+	if err != "" {
 		log.Fatal(err)
 	}
-
-	err = farm.ReadFile(file)
-	file.Close()
-	if err != nil {
-		fmt.Println(err)
-		return
+	validways := lem.Search()
+	if len(validways) == 0 {
+		log.Fatal("ERROR: no way found ")
 	}
-	farm.FindPaths() // Call BFS to find all paths
-	// lets filter some bad paths
-	farm.Filter()
-// fre the bad links for memorry 
-	farm.Badpaths = nil 
-	
-	if len(farm.ValidPaths) == 0 {
-		log.Fatal("ERROR: invalid data format, no path found")
-	}
-	file, err = os.Open(os.Args[1])
-	if err != nil {
+	file, er := os.Open(os.Args[1])
+	if er != nil {
 		log.Fatal(err)
 	}
-
-	// lets prait the output
-	output, err := io.ReadAll(file)
-	if err != nil {
+	graph, er := io.ReadAll(file)
+	if er != nil {
 		log.Fatal(err)
 	}
-	os.Stdout.Write(output)
-	fmt.Println()
-	fmt.Println()
-	farm.Sendants()
+	os.Stdout.Write(graph)
+	fmt.Print("\n\n")
+	lem.Sendants()
+	fmt.Printf("validways: %v\n", validways)
 }
