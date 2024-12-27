@@ -1,8 +1,12 @@
 package lem
 
+
 // this is the main function of our logic , it chooses the optimal set of paths for the ants
 func Search() [][]string {
 	visited[Start] = true
+	if contains() {
+		solutions = append(solutions, []string{Start, End})
+	}
 	sol1 := SearchHelper(Ants, false)
 	visited = make(map[string]bool)
 	visited[Start] = true
@@ -12,6 +16,17 @@ func Search() [][]string {
 	return solutions
 }
 
+// this function checks if the start is linked directly with end
+func contains() bool {
+	for i, v := range Ways[Start] {
+		if v == End {
+			Ways[Start] = append(Ways[Start][:i], Ways[Start][i+1:]...)
+			return true
+		}
+	}
+	return false
+}
+
 // select the best path between the two paths given usng the average
 func Choose(sol1, sol2 [][]string) {
 	if len(sol1) < len(sol2) {
@@ -19,20 +34,20 @@ func Choose(sol1, sol2 [][]string) {
 		return
 	}
 	if len(sol1) > len(sol2) {
-		solutions = sol1
+		solutions = append(solutions, sol1...)
 		return
 	}
 	if len(sol1) == 0 {
-		solutions = sol2
+		solutions = append(solutions, sol2...)
 		return
 	}
 	avg1 := Average(sol1)
 	avg2 := Average(sol2)
 	if avg1 > avg2 {
-		solutions = sol2
+		solutions = append(solutions, sol2...)
 		return
 	}
-	solutions = sol1
+	solutions = append(solutions, sol1...)
 }
 
 // this function calculate the average of each slice in the slice of slices given
@@ -99,7 +114,9 @@ func Bfs(s string, solution1 *[][]string, ant *int) bool {
 		solutions = append(solutions, Findway(parent))
 		return false
 	}
-
+	if visited[s] {
+		return false
+	}
 	visited[Start] = true
 	queu := []string{s}
 	visited[s] = true
@@ -168,7 +185,6 @@ func Close(sol [][]string) {
 		}
 	}
 }
-
 
 // this function reverse the order of elements in a slice
 func Flip(s []string) []string {

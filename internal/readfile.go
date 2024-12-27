@@ -22,8 +22,8 @@ func ReadFile(file *os.File) string {
 			if err != nil {
 				return "ERROR: invalid number of ants (LINE:" + strconv.Itoa(nline) + ")"
 			}
-			if num == 0 {
-				return "ERROR: number of ants cant be 0 (LINE:" + strconv.Itoa(nline) + ")"
+			if num <= 0 {
+				return "ERROR: number of ants cant be 0 or negative (LINE:" + strconv.Itoa(nline) + ")"
 			}
 			Ants = num
 			i = 1
